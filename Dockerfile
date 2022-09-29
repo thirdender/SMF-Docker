@@ -1,5 +1,4 @@
-FROM php:5.6.35-apache-jessie
-MAINTAINER james.mclean@gmail.com
+FROM php:apache-bullseye
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade \
@@ -11,24 +10,22 @@ RUN apt-get update \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install \
-    mysql \
-    pgsql
+RUN docker-php-ext-install pgsql
 
 EXPOSE 80/tcp
 
 # Download SMF
 RUN mkdir -p /var/www/html \
     && cd /var/www/html \
-    && wget "https://download.simplemachines.org/index.php/smf_2-0-15_install.tar.gz" \
-    && tar zxf smf_2-0-15_install.tar.gz
+    && wget "https://download.simplemachines.org/index.php/smf_2-1-2_install.tar.gz" \
+    && tar zxf smf_2-1-2_install.tar.gz
 
 # Set the permissions SMF wants. They say 777 suggested!
 RUN chmod 777 /var/www/html/attachments \
     /var/www/html/avatars \
+    /var/www/html/custom_avatar \
     /var/www/html/cache \
     /var/www/html/Packages \
-    /var/www/html/Packages/installed.list \
     /var/www/html/Smileys \
     /var/www/html/Themes \
     /var/www/html/agreement.txt \
